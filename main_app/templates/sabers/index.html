@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/saber-index.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+  <h1>Saber List</h1>
+  <img src="{% static 'images/lightsabericon1.svg' %}" alt="A cool saber" />
+  <img src="{% static 'images/icon-lightsaber-2.png' %}" alt="A red saber" />
+</section>
+
+<section class="card-container">
+  {% for saber in sabers %}
+    <div class="card">
+      <div class="card-content">
+        <div class="card-img-container">
+          <img 
+            class='default-saber'
+            src="{% static 'images/vaderssabers.jpg' %}" 
+            alt="Class of sabers"
+          >
+        </div>
+        <h2 class="card-title">{{ saber.owner }}</h2>
+        {% if saber.blades > 0 %}
+          <p>A {{ saber.blades }} bladed {{ saber.color }} saber</p>
+        {% else %}
+          <p>A {{ saber.color }} saber..</p>
+        {% endif %}
+        <p><small>{{ saber.hilt }}</small></p>
+      </div>
+    </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +8,10 @@
   <link
     rel="shortcut icon"
     type="image/png"
-    href=""
+    href="{% static 'images/yellowsabers.png' %}"
   >
   <title>Saber Collector</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
   {% block head %}
   {% endblock %}
 </head>
@@ -18,13 +20,15 @@
     <div class="header-logo-container">
       <a href="/">
         <img 
-          src="" 
+          class="image-in-container"
+          src="{% static 'images/image2vector.svg' %}" 
           alt="The Saber Collector Logo"
         >
       </a>
     </div>
     <nav>
       <ul>
+        <li><a href="/sabers">All Sabers</a></li>
         <li><a href="/about">About</a></li>
       </ul>
     </nav>
