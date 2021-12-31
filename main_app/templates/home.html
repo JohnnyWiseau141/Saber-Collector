@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+<section class="logo-container">
+  <div class="saber-container">
+    <img class='grevious-collector' src="{% static 'images/grevious-collection.jpg' %}" alt="The Saber Collector Saber" />
+  </div>
+  <img 
+    class='saber-banner'
+    src="{% static 'images/lightsaberbanner.png' %}" 
+    alt="Text reads: Saber Collector"
+  />
+</section>
+
+{% endblock %}

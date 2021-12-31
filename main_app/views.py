@@ -1,28 +1,18 @@
 from django.shortcuts import render
+from .models import Saber
 
-# Add the following import
-from django.http import HttpResponse
 
 # Define the home view
 def home(request):
-  return HttpResponse('<h1>Hello there, General Grevious, you coughdropping fudge-popper</h1>')
+  return render(request, 'home.html')
 
 def about(request):
   return render(request, 'about.html')
 
 def sabers_index(request):
-  return render(request, 'sabers/index.html', { 'sabers': sabers})
+  sabers = Saber.objects.all()
+  return render(request, 'sabers/index.html', { 'sabers': sabers })
 
-class Saber:
-  def __init__(self, owner, color, hilt, blades):
-    self.owner = owner
-    self.color = color
-    self.hilt = hilt
-    self.blades = blades
-
-sabers = [
-  Saber('Cal Kestis', 'blue', 'custom', 2),
-  Saber('Obi-wan', 'blue', 'round-bottom', 1),
-  Saber('Maul', 'red', 'long and techie', 2),
-  Saber('Rey Skywalker', 'yellow', 'Black copy of Maul\'s hilt', 1),
-]
+def sabers_detail(request, saber_id):
+  saber = Saber.objects.get(id=saber_id)
+  return render(request, 'sabers/detail.html', { 'saber': saber })

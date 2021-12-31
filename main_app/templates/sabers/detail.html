@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link 
+  rel="stylesheet" 
+  type="text/css" 
+  href="{% static 'css/saber-detail.css' %}"
+/>
+{% endblock %}
+
+{% block content %}
+
+<section class="saber-container">
+  <div class="saber-img">
+    <img 
+      class="saber-deets-icon"
+      src="{% static 'images/vaderssabers.jpg' %}" 
+      alt="A default saber"
+    >
+  </div>
+  <div class="saber-details">
+    <h1>{{ saber.owner }}</h1>
+    {% if saber.age > 0 %}
+      <h2>{{ saber.blades }} bladed {{ saber.color }} saber.</h2>
+    {% else %}
+      <h2>A {{ saber.color }} saber.</h2>
+    {% endif %}
+    <p>{{ saber.hilt }}</p>
+  </div>
+</section>
+
+{% endblock %}
