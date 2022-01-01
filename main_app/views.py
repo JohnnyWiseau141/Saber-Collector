@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Saber
+from django.views.generic import ListView, DetailView
+from .models import Saber, Crystal
 from .forms import RepairingForm
 
 
@@ -41,3 +42,21 @@ class SaberUpdate(UpdateView):
 class SaberDelete(DeleteView):
   model = Saber
   success_url = '/sabers/'
+
+class CrystalCreate(CreateView):
+  model = Crystal
+  fields = '__all__'
+
+class CrystalList(ListView):
+  model = Crystal
+
+class CrystalDetail(DetailView):
+  model = Crystal
+
+class CrystalUpdate(UpdateView):
+  model = Crystal
+  fields = ['type', 'color']
+
+class CrystalDelete(DeleteView):
+  model = Crystal
+  success_url = '/crystals/'

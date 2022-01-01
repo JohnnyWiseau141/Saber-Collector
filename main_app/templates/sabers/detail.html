@@ -57,11 +57,17 @@
       method="post" 
       class="subsection-content"
     >
+      {% if saber.fixed_for_today %}
+        <p class="fixed">{{saber.owner}}'s saber has been adequetly fixed today!</p>
+      {% else %}
+        <p class="unfixed">{{saber.owner}}'s saber might need repairs!</p>
+      {% endif %}
       {% csrf_token %}
       {{ repairing_form.as_p }}
       <button type="submit" class="btn submit">Repair</button>
     </form>
     <h3>Past Repair jobs</h3>
+    {% if saber.repairing_set.all.count %}
     <table>
       <thead>
         <tr><th>Date</th><th>Part</th></tr>
@@ -75,6 +81,9 @@
         {% endfor %}
       </tbody>
     </table>
+    {% else %}
+      <h4 class="subsection-content">{{saber.owner}}'s saber has never been repaired 😟</h4>
+    {% endif %}
   </section>
 </div>
 

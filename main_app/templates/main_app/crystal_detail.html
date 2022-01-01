@@ -1,0 +1,24 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block head %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'css/crystal-detail.css' %}"
+/>
+{% endblock %}
+
+{% block content %}
+  
+<div class="card" style="border-color: {{ crystal.color }}">
+  <div class="card-bg" style="background-color: {{ crystal.color }}"></div>
+  <div class="card-content">
+    <h2>{{ crystal.type }}</h2>
+    <p>A {{ crystal.color }} crystal</p>
+  </div>
+</div>
+<a href="{% url 'crystals_update' crystal.id %}" class="btn warn">Edit</a>
+<a href="{% url 'crystals_delete' crystal.id %}" class="btn danger">Delete</a>
+
+{% endblock %}

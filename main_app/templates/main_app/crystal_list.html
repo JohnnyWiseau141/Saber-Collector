@@ -1,0 +1,33 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block head %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'css/crystal-index.css' %}"
+/>
+{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+  <h1>All Kyber Crystals</h1>
+  <img src="{% static 'images/kybercrystal.png' %}" alt="A bunch of Crystals" />
+</section>
+
+<section class="card-container">
+  {% for crystal in crystal_list %}
+  <div class="card" style="border-color: {{ crystal.color }}">
+    <div class="card-bg" style="background-color: {{ crystal.color }}"></div>
+    <a href="{% url 'crystals_detail' crystal.id %}">
+      <div class="card-content">
+        <h2>{{ crystal.type }} Crystal</h2>
+        <p>A {{ crystal.color }} kyber crystal</p>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

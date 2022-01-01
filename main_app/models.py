@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from datetime import date
 
 PARTS = (
   ('I', 'Ion energy Cell'),
@@ -20,6 +21,9 @@ class Saber(models.Model):
   def get_absolute_url(self):
     return reverse('sabers_detail', kwargs={'saber_id': self.id})
 
+  def fixed_for_today(self):
+    return self.repairing_set.filter(date=date.today()).count() >= len(PARTS)
+
 class Repairing(models.Model):
   date = models.DateField('Repair Date')
   part = models.CharField(
@@ -32,3 +36,17 @@ class Repairing(models.Model):
 
   def __str__(self):
     return f"{self.get_part_display()} on {self.date}"
+
+  class Meta:
+    ordering = ['-date']
+
+
+class Crystal(models.Model):
+  type = models.CharField(max_length=50)
+  color = models.CharField(max_length=20)
+
+  def __str__(self):
+    return self.type
+
+  def get_absolute_url(self):
+    return reverse('crystals_detail', kwargs={'pk': self.id})
