@@ -27,6 +27,10 @@
       <h2>A {{ saber.color }} saber.</h2>
     {% endif %}
     <p>{{ saber.hilt }}</p>
+    <div class="saber-actions">
+      <a href="{% url 'sabers_update' saber.id %}" class="btn warn">Edit</a>
+      <a href="{% url 'sabers_delete' saber.id %}" class="btn danger">Delete</a>
+    </div>
   </div>
 </section>
 

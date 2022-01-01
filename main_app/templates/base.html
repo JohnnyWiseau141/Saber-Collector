@@ -28,8 +28,9 @@
     </div>
     <nav>
       <ul>
-        <li><a href="/sabers">All Sabers</a></li>
-        <li><a href="/about">About</a></li>
+        <li><a href="{% url 'sabers_index' %}">All Sabers</a></li>
+        <li><a href="{% url 'sabers_create' %}">Add a Saber</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
       </ul>
     </nav>
   </header>

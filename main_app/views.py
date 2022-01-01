@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Saber
 
 
@@ -16,3 +17,15 @@ def sabers_index(request):
 def sabers_detail(request, saber_id):
   saber = Saber.objects.get(id=saber_id)
   return render(request, 'sabers/detail.html', { 'saber': saber })
+
+class SaberCreate(CreateView):
+  model = Saber
+  fields = '__all__'
+
+class SaberUpdate(UpdateView):
+  model = Saber
+  fields = ['color', 'hilt', 'blades']
+
+class SaberDelete(DeleteView):
+  model = Saber
+  success_url = '/saber/'
