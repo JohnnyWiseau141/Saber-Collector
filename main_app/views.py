@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Saber
 from .forms import RepairingForm
@@ -21,6 +21,14 @@ def sabers_detail(request, saber_id):
   return render(request, 'sabers/detail.html', {
     'saber': saber, 'repairing_form': repairing_form
   })
+
+def add_repairing(request, saber_id):
+  form = RepairingForm(request.POST)
+  if form.is_valid():
+    new_repairing = form.save(commit=False)
+    new_repairing.saber_id = saber_id
+    new_repairing.save()
+  return redirect('sabers_detail', saber_id=saber_id)
 
 class SaberCreate(CreateView):
   model = Saber
