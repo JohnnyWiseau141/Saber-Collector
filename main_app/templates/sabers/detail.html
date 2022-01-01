@@ -22,11 +22,19 @@
 
 <section class="saber-container">
   <div class="saber-img">
-    <img 
-      class="saber-deets-icon"
-      src="{% static 'images/vaderssabers.jpg' %}" 
-      alt="A default saber"
-    >
+    {% if saber.photo.url %}
+      <img 
+        src="{{saber.photo.url}}" 
+        alt="A photo of {{saber.owner}}'s saber"
+        class="usr-img"
+      >
+    {% else %}
+      <img 
+        class="saber-deets-icon"
+        src="{% static 'images/vaderssabers.jpg' %}" 
+        alt="A default saber"
+      >
+  {% endif %}
   </div>
   <div class="saber-details">
     <h1>{{ saber.owner }}</h1>
@@ -40,6 +48,20 @@
       <a href="{% url 'sabers_update' saber.id %}" class="btn warn">Edit</a>
       <a href="{% url 'sabers_delete' saber.id %}" class="btn danger">Delete</a>
     </div>
+    <h3>Change {{ saber.owner }}'s photo</h3>
+    <p id="file-name"></p>
+    <form 
+      action="{% url 'add_photo' saber.id %}"
+      enctype="multipart/form-data"
+      method="POST"
+    >
+      {% csrf_token %}
+      <label class="btn secondary">
+        Choose photo
+        <input type="file" name="photo-file" id="file-input">
+      </label>
+      <button type="submit" class="btn submit">Upload Photo</button>
+    </form>
   </div>
 </section>
 <div class="repairings-crystal-container">

@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
-from .models import Saber, Crystal
+from .models import Saber, Crystal, Photo
 from .forms import RepairingForm
+import uuid
+import boto3
 
+S3_BASE_URL = 'https://s3.us-east-1.amazonaws.com/'
+BUCKET = 'saber-collection-141'
 
 # Define the home view
 def home(request):
@@ -65,3 +69,28 @@ class CrystalUpdate(UpdateView):
 class CrystalDelete(DeleteView):
   model = Crystal
   success_url = '/crystals/'
+
+def add_photo(request, saber_id):
+  # photo-file will be the "name" attribute on the <input type="file">
+  photo_file = request.FILES.get('photo-file', None)
+  if photo_file:
+    s3 = boto3.client('s3')
+    # need a unique "key" for S3 / needs image file extension too
+		# uuid.uuid4().hex generates a random hexadecimal Universally Unique Identifier
+    # Add on the file extension using photo_file.name[photo_file.name.rfind('.'):]
+    key = uuid.uuid4().hex + photo_file.name[photo_file.name.rfind('.'):]
+    # just in case something goes wrong
+    try:
+      s3.upload_fileobj(photo_file, BUCKET, key)
+      # build the full url string
+      url = f"{S3_BASE_URL}{BUCKET}/{key}"
+      # we can assign to saber_id or saber (if you have a saber object)
+      photo = Photo(url=url, saber_id=saber_id)
+      # Remove old photo if it exists
+      saber_photo = Photo.objects.filter(saber_id=saber_id)
+      if saber_photo.first():
+        saber_photo.first().delete()
+      photo.save()
+    except Exception as err:
+      print('An error occurred uploading file to S3: %s' % err)
+  return redirect('sabers_detail', saber_id=saber_id)
