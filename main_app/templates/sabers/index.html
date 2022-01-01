@@ -19,20 +19,28 @@
       <a href="{% url 'sabers_detail' saber.id %}">
         <div class="card-content">
           <div class="card-img-container">
+            {% if saber.photo.url %}
+              <img 
+                src="{{saber.photo.url}}" 
+                alt="A photo of {{saber.owner}}'s saber"
+                class="usr-img"
+              >
+            {% else %}
             <img 
               class='default-saber'
               src="{% static 'images/vaderssabers.jpg' %}" 
               alt="Class of sabers"
             >
-          </div>
-          <h2 class="card-title">{{ saber.owner }}</h2>
-          {% if saber.blades > 0 %}
-            <p>{{ saber.blades }} bladed {{ saber.color }} saber</p>
-          {% else %}
-            <p>A {{ saber.color }} saber..</p>
           {% endif %}
-          <p><small>{{ saber.hilt }}</small></p>
         </div>
+        <h2 class="card-title">{{ saber.owner }}</h2>
+        {% if saber.blades > 0 %}
+          <p>{{ saber.blades }} bladed {{ saber.color }} saber</p>
+        {% else %}
+          <p>A {{ saber.color }} saber..</p>
+        {% endif %}
+        <p><small>{{ saber.hilt }}</small></p>
+      </div>
       </a>
     </div>
   {% endfor %}
