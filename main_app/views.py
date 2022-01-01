@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Saber
+from .forms import RepairingForm
 
 
 # Define the home view
@@ -16,7 +17,10 @@ def sabers_index(request):
 
 def sabers_detail(request, saber_id):
   saber = Saber.objects.get(id=saber_id)
-  return render(request, 'sabers/detail.html', { 'saber': saber })
+  repairing_form = RepairingForm()
+  return render(request, 'sabers/detail.html', {
+    'saber': saber, 'repairing_form': repairing_form
+  })
 
 class SaberCreate(CreateView):
   model = Saber

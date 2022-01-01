@@ -3,10 +3,19 @@
 
 {% block head %}
 <link 
+  href="https://cdn.jsdelivr.net/npm/mc-datepicker/dist/mc-calendar.min.css" 
+  rel="stylesheet" 
+/>
+<script 
+  src="https://cdn.jsdelivr.net/npm/mc-datepicker/dist/mc-calendar.min.js"
+>
+</script>
+<link 
   rel="stylesheet" 
   type="text/css" 
   href="{% static 'css/saber-detail.css' %}"
 />
+<script defer src="{% static 'js/saber-detail.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -33,5 +42,39 @@
     </div>
   </div>
 </section>
+<div class="repairings-crystal-container">
+  <section class="repairings">
+    <div class="subsection-title">
+      <h2>Repairs</h2>
+      <img 
+        src="{% static 'images/LightSaberConstruction.jpg' %}" 
+        alt="Saber Construction"
+      />
+    </div>
+    <h3>Add a repair job</h3>
+    <form
+      method="post" 
+      class="subsection-content"
+    >
+      {% csrf_token %}
+      {{ repairing_form.as_p }}
+      <button type="submit" class="btn submit">Repair</button>
+    </form>
+    <h3>Past Repair jobs</h3>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Part</th></tr>
+      </thead>
+      <tbody>
+        {% for repairing in saber.repairing_set.all %}
+          <tr>
+            <td>{{repairing.date}}</td>
+            <td>{{repairing.get_part_display}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
 
 {% endblock %}
