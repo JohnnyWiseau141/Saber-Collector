@@ -28,4 +28,4 @@ class SaberUpdate(UpdateView):
 
 class SaberDelete(DeleteView):
   model = Saber
-  success_url = '/saber/'
+  success_url = '/sabers/'

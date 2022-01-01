@@ -7,8 +7,13 @@
 
 {% block content %}
 
+  {% if object %}
+    <h1>Edit {{object.owner}}'s saber</h1>
+  {% else %}
+    <h1>Add a Saber</h1>
+  {% endif %}
+
 <div class="page-header">
-  <h1>Add a Saber</h1>
   <img src="{% static 'images/lukeconstruction.jpg' %}" alt="A Jedi creating a saber"/>
 </div>
 {% comment %} 
