@@ -18,9 +18,10 @@ def sabers_index(request):
 
 def sabers_detail(request, saber_id):
   saber = Saber.objects.get(id=saber_id)
+  crystals_saber_doesnt_have = Crystal.objects.exclude(id__in = saber.crystals.all().values_list('id'))
   repairing_form = RepairingForm()
   return render(request, 'sabers/detail.html', {
-    'saber': saber, 'repairing_form': repairing_form
+    'saber': saber, 'repairing_form': repairing_form, 'crystals': crystals_saber_doesnt_have
   })
 
 def add_repairing(request, saber_id):
@@ -31,9 +32,13 @@ def add_repairing(request, saber_id):
     new_repairing.save()
   return redirect('sabers_detail', saber_id=saber_id)
 
+def assoc_crystal(request, saber_id, crystal_id):
+  Saber.objects.get(id=saber_id).crystals.add(crystal_id)
+  return redirect('sabers_detail', saber_id=saber_id)
+
 class SaberCreate(CreateView):
   model = Saber
-  fields = '__all__'
+  fields = ['owner', 'color', 'hilt', 'blades']
 
 class SaberUpdate(UpdateView):
   model = Saber

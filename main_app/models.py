@@ -8,12 +8,23 @@ PARTS = (
   ('S', 'Stabilizing Ring')
 )
 
+class Crystal(models.Model):
+  type = models.CharField(max_length=50)
+  color = models.CharField(max_length=20)
+
+  def __str__(self):
+    return self.type
+
+  def get_absolute_url(self):
+    return reverse('crystals_detail', kwargs={'pk': self.id})
+
 # Create your models here.
 class Saber(models.Model):
   owner = models.CharField(max_length=100)
   color = models.CharField(max_length=100)
   hilt = models.TextField(max_length=250)
   blades = models.IntegerField()
+  crystals = models.ManyToManyField(Crystal)
 
   def __str__(self):
     return self.owner
@@ -41,12 +52,3 @@ class Repairing(models.Model):
     ordering = ['-date']
 
 
-class Crystal(models.Model):
-  type = models.CharField(max_length=50)
-  color = models.CharField(max_length=20)
-
-  def __str__(self):
-    return self.type
-
-  def get_absolute_url(self):
-    return reverse('crystals_detail', kwargs={'pk': self.id})
