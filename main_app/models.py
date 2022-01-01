@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from datetime import date
+from django.contrib.auth.models import User
 
 PARTS = (
   ('I', 'Ion energy Cell'),
@@ -25,6 +26,7 @@ class Saber(models.Model):
   hilt = models.TextField(max_length=250)
   blades = models.IntegerField()
   crystals = models.ManyToManyField(Crystal)
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
 
   def __str__(self):
     return self.owner

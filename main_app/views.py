@@ -1,6 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from .models import Saber, Crystal, Photo
 from .forms import RepairingForm
 import uuid
@@ -10,16 +15,18 @@ S3_BASE_URL = 'https://s3.us-east-1.amazonaws.com/'
 BUCKET = 'saber-collection-141'
 
 # Define the home view
-def home(request):
-  return render(request, 'home.html')
+class Home(LoginView):
+  template_name = 'home.html'
 
 def about(request):
   return render(request, 'about.html')
 
+@login_required
 def sabers_index(request):
-  sabers = Saber.objects.all()
+  sabers = Saber.objects.filter(user=request.user)
   return render(request, 'sabers/index.html', { 'sabers': sabers })
 
+@login_required
 def sabers_detail(request, saber_id):
   saber = Saber.objects.get(id=saber_id)
   crystals_saber_doesnt_have = Crystal.objects.exclude(id__in = saber.crystals.all().values_list('id'))
@@ -28,6 +35,7 @@ def sabers_detail(request, saber_id):
     'saber': saber, 'repairing_form': repairing_form, 'crystals': crystals_saber_doesnt_have
   })
 
+@login_required
 def add_repairing(request, saber_id):
   form = RepairingForm(request.POST)
   if form.is_valid():
@@ -36,37 +44,43 @@ def add_repairing(request, saber_id):
     new_repairing.save()
   return redirect('sabers_detail', saber_id=saber_id)
 
+@login_required
 def assoc_crystal(request, saber_id, crystal_id):
   Saber.objects.get(id=saber_id).crystals.add(crystal_id)
   return redirect('sabers_detail', saber_id=saber_id)
 
-class SaberCreate(CreateView):
+class SaberCreate(LoginRequiredMixin, CreateView):
   model = Saber
   fields = ['owner', 'color', 'hilt', 'blades']
 
-class SaberUpdate(UpdateView):
+  def form_valid(self, form):
+    form.instance.user = self.request.user
+    return super().form_valid(form)
+
+
+class SaberUpdate(LoginRequiredMixin, UpdateView):
   model = Saber
   fields = ['color', 'hilt', 'blades']
 
-class SaberDelete(DeleteView):
+class SaberDelete(LoginRequiredMixin, DeleteView):
   model = Saber
   success_url = '/sabers/'
 
-class CrystalCreate(CreateView):
+class CrystalCreate(LoginRequiredMixin, CreateView):
   model = Crystal
   fields = '__all__'
 
-class CrystalList(ListView):
+class CrystalList(LoginRequiredMixin, ListView):
   model = Crystal
 
-class CrystalDetail(DetailView):
+class CrystalDetail(LoginRequiredMixin, DetailView):
   model = Crystal
 
-class CrystalUpdate(UpdateView):
+class CrystalUpdate(LoginRequiredMixin, UpdateView):
   model = Crystal
   fields = ['type', 'color']
 
-class CrystalDelete(DeleteView):
+class CrystalDelete(LoginRequiredMixin, DeleteView):
   model = Crystal
   success_url = '/crystals/'
 
@@ -94,3 +108,23 @@ def add_photo(request, saber_id):
     except Exception as err:
       print('An error occurred uploading file to S3: %s' % err)
   return redirect('sabers_detail', saber_id=saber_id)
+
+
+def signup(request):
+  error_message = ''
+  if request.method == 'POST':
+    # This is how to create a 'user' form object
+    # that includes the data from the browser
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+      # This will add the user to the database
+      user = form.save()
+      # This is how we log a user in
+      login(request, user)
+      return redirect('sabers_index')
+    else:
+      error_message = 'Invalid sign up - try again'
+  # A bad POST or a GET request, so render signup.html with an empty form
+  form = UserCreationForm()
+  context = {'form': form, 'error_message': error_message}
+  return render(request, 'signup.html', context)
